@@ -16,12 +16,12 @@ services:
 
 
   survivor:
-    container_name: survivor-app
+    container_name: survivor
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/survivor
+      - .:/app
     links:
       - postgres
     ports:
@@ -39,13 +39,12 @@ services:
     entrypoint: ./entrypoints/docker-entrypoint.sh
 
   app-migrations:
-    container_name: pdf-migrations
+    container_name: survivor-migrations
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
       - postgres
-      - redis
     volumes:
       - .:/app
     env_file: .env
@@ -56,4 +55,4 @@ services:
 
 volumes:
   survivor-postgres:
-  survivor:
+  app:
