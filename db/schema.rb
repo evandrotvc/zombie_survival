@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_06_151747) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_06_180636) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,6 +30,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_06_151747) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "mark_survivors", force: :cascade do |t|
+    t.bigint "user_report_id"
+    t.bigint "user_marked_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_marked_id"], name: "index_mark_survivors_on_user_marked_id"
+    t.index ["user_report_id", "user_marked_id"], name: "index_mark_survivors_on_user_report_id_and_user_marked_id", unique: true
+    t.index ["user_report_id"], name: "index_mark_survivors_on_user_report_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "gender"
@@ -44,4 +54,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_06_151747) do
 
   add_foreign_key "inventories", "items", column: "items_id"
   add_foreign_key "inventories", "users", column: "users_id"
+  add_foreign_key "mark_survivors", "users", column: "user_marked_id"
+  add_foreign_key "mark_survivors", "users", column: "user_report_id"
 end
