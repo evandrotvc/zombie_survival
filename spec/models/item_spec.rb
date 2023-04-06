@@ -17,18 +17,5 @@ RSpec.describe Item do
 
       it { is_expected.to be_persisted }
     end
-
-    # context 'when a person report as infected the same person one more time' do
-    #   let(:mark_survivor2) do
-    #     described_class.new(person_marked: mark_survivor.person_marked,
-    #       person_report: mark_survivor.person_report)
-    #   end
-
-    #   before { mark_survivor.save }
-
-    #   it 'will raise exception', :aggregate_failures do
-    #     expect { mark_survivor2.save! }.to raise_error(ActiveRecord::RecordNotUnique)
-    #   end
-    # end
   end
 end
