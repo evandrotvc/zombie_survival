@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Item < ApplicationRecord
-  belongs_to :user, optional: true
+  has_many :inventories, dependent: :destroy
 
   validates :kind, :point, presence: true
   validates_uniqueness_of :kind

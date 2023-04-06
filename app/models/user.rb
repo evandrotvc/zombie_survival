@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  validates :name, :age, :latitude, :longitude, presence: true
+  has_many :inventories, dependent: :destroy
 
-  has_many :items, dependent: :destroy
+  validates :name, :age, :latitude, :longitude, presence: true
 
   enum status: {
     survivor: 'survivor', infected: 'infected', dead: 'dead'
