@@ -12,10 +12,9 @@ RSpec.describe User do
     it { is_expected.to validate_presence_of(:age) }
   end
 
-  # describe 'associations' do
-  #   # it { is_expected.to have_many(:group_documents) }
-  #   it { is_expected.to have_many(:inventories) }
-  # end
+  describe 'associations' do
+    it { is_expected.to have_one(:inventory) }
+  end
 
   describe 'User create' do
     before { user.save }

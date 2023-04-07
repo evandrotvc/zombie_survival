@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Inventory < ApplicationRecord
-  belongs_to :user#, inverse_of: :inventory
+  belongs_to :user
 
-  has_many :items
-  # has_many :items, through: :inventory_items
+  has_many :items, dependent: :destroy
 end

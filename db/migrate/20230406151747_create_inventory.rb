@@ -1,9 +1,10 @@
 class CreateInventory < ActiveRecord::Migration[7.0]
   def change
     create_table :inventories do |t|
-      t.belongs_to :user, foreign_key: true, index: true
-      # t.references :items, foreign_key: true, index: true
+      t.references :user, foreign_key: true, index: true
       t.timestamps
     end
+
+    add_reference :items, :inventory, foreign_key: true, index: true
   end
 end
