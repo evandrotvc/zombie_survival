@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  has_many :inventories
+  # has_one :inventory
+  has_one :inventory, inverse_of: :user, dependent: nil
 
   validates :name, :age, :latitude, :longitude, presence: true
 

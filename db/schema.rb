@@ -10,17 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_06_180636) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_07_134603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "inventories", force: :cascade do |t|
-    t.bigint "users_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_inventories_on_user_id"
+  end
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.bigint "inventories_id"
     t.bigint "items_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["items_id"], name: "index_inventories_on_items_id"
-    t.index ["users_id"], name: "index_inventories_on_users_id"
+    t.index ["inventories_id"], name: "index_inventory_items_on_inventories_id"
+    t.index ["items_id"], name: "index_inventory_items_on_items_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -52,8 +59,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_06_180636) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "inventories", "items", column: "items_id"
-  add_foreign_key "inventories", "users", column: "users_id"
+  add_foreign_key "inventories", "users"
+  add_foreign_key "inventory_items", "inventories", column: "inventories_id"
+  add_foreign_key "inventory_items", "items", column: "items_id"
   add_foreign_key "mark_survivors", "users", column: "user_marked_id"
   add_foreign_key "mark_survivors", "users", column: "user_report_id"
 end
