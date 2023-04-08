@@ -7,5 +7,12 @@ Rails.application.routes.draw do
         post :infected, controller: :users
       end
     end
+    resources :items do
+      collection do
+        post :add
+        delete :remove
+        put :trade
+      end
+    end
   end
 end
