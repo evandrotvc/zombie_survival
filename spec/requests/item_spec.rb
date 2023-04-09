@@ -44,4 +44,75 @@ RSpec.describe 'Item' do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  describe 'POST /trade' do
+    let!(:user) { create(:user) }
+    let!(:inventory) { create(:inventory, user:) }
+    let!(:userB) { create(:user) }
+    let!(:inventory2) { create(:inventory, user: userB) }
+    let(:request) { post trade_user_items_path(user.id), params: params }
+
+    let(:params) do
+      {
+        user: {
+          items: ['water']
+        },
+        user_to: {
+          name: userB.name,
+          items: ['food', 'ammunition']
+        }
+      }
+    end
+
+    context 'user dont have some items in inventory' do
+      let!(:water) { create(:item, inventory: inventory) }
+      let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
+
+      it 'must to raise exception' do
+        request
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json[:message]).to eq('User doesnt have some item!')
+      end
+    end
+
+    context 'items points are insuficients for the trade' do
+      let!(:water) { create(:item, inventory: inventory) }
+      let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
+
+      let(:params) do
+        {
+          user: {
+            items: ['water']
+          },
+          user_to: {
+            name: userB.name,
+            items: ['ammunition']
+          }
+        }
+      end
+
+      it 'must to raise exception' do
+        request
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json[:message]).to eq('Items points are insuficients for the trade!')
+      end
+    end
+
+    context 'trade with success' do
+      let!(:water) { create(:item, inventory: inventory) }
+      let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
+      let!(:food) { create(:item, kind: :food, inventory: inventory2) }
+
+      it 'must to happen trade with sucess' do
+        request
+
+        expect{ water.reload }.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)
+        expect{ ammunition.reload }.to change(ammunition, :inventory_id).from(inventory2.id).to(inventory.id)
+        expect{ food.reload }.to change(food, :inventory_id).from(inventory2.id).to(inventory.id)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end

@@ -21,12 +21,12 @@ class TradeService
 
       return true if @itemsFrom.count == itemsFrom.count && @itemsTo.count == itemsTo.count
 
-      raise TradeError
+      raise TradeError.new('User doesnt have some item!')
     end
 
     def check_points_trade
       return true if @itemsFrom.pluck(:point).sum == @itemsTo.pluck(:point).sum
 
-      raise TradeError
+      raise TradeError.new('Items points are insuficients for the trade!')
     end
   end

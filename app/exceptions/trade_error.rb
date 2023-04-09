@@ -1,5 +1,5 @@
 class TradeError < StandardError
-    def message
-      "Saldo insuficiente."
-    end
+    def initialize(msg="Trade error.")
+        super(msg)
+      end
 end
