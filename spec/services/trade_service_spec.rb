@@ -58,5 +58,19 @@ RSpec.describe TradeService, type: :service do
         end
       end
     end
+
+    describe '#trade' do
+      let!(:water) { create(:item, inventory:) }
+      let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
+      let!(:food) { create(:item, kind: :food, inventory: inventory2) }
+
+      before { described_instance.trade(itemsFrom, itemsTo) }
+
+      it 'must to happen trade with sucess' do
+        expect{ water.reload }.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)
+        expect{ ammunition.reload }.to change(ammunition, :inventory_id).from(inventory2.id).to(inventory.id)
+        expect{ food.reload }.to change(food, :inventory_id).from(inventory2.id).to(inventory.id)
+      end
+    end
   end
 end
