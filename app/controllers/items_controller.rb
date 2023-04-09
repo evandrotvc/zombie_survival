@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
     def trade
       @user_to = User.find_by(name: user_to_params[:name])
 
-      TradeService.new(@user, @user_to).trade(user_from_params[:items], user_to_params[:items])
+      TradeService.new(@user, @user_to).execute(user_from_params[:items], user_to_params[:items])
 
       render status: :ok, json: @user
     end

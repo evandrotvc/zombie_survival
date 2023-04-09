@@ -6,7 +6,7 @@ class TradeService
       @itemsTo = user_to.inventory.items
     end
 
-    def trade(itemsFrom, itemsTo)
+    def execute(itemsFrom, itemsTo)
       return unless exists_items_inventory?(itemsFrom, itemsTo)
 
       return unless check_points_trade
