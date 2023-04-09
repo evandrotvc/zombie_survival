@@ -15,4 +15,9 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get 'reports/infected_percentage'
+  get 'reports/non_infected_percentage'
+  get 'reports/average_items_per_user'
+  get 'reports/lost_points'
 end
