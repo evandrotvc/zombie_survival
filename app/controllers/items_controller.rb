@@ -20,7 +20,9 @@ class ItemsController < ApplicationController
     end
 
     def trade
-      @user_to = User.find_by(name: params[:name])
+      @user_to = User.find_by(name: user_to_params[:name])
+      TradeService.new(@user, @user_to).trade(user_from_params[:items], user_to_params[:items])
+
       render status: :ok, json: @user
     end
   
@@ -32,5 +34,13 @@ class ItemsController < ApplicationController
   
     def item_params
       params.require(:item).permit(:kind)
+    end
+
+    def user_from_params
+      params.require(:user).permit(:items => [])
+    end
+
+    def user_to_params
+      params.require(:user_to).permit(:name, :items => [])
     end
   end

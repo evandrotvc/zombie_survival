@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       collection do
         post :add
         delete :remove
-        put :trade
+        post :trade
       end
     end
   end
