@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TradeService, type: :service do
@@ -23,7 +25,7 @@ RSpec.describe TradeService, type: :service do
 
         it 'must return true' do
           expect(described_instance.exists_items_inventory?(itemsFrom,
-            itemsTo)).to eq(true)
+            itemsTo)).to be(true)
         end
       end
 
@@ -32,8 +34,10 @@ RSpec.describe TradeService, type: :service do
         let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
         it 'must raise Exception TradeError' do
-          expect { described_instance.exists_items_inventory?(itemsFrom,
-            itemsTo) }.to raise_error(TradeError)
+          expect do
+            described_instance.exists_items_inventory?(itemsFrom,
+              itemsTo)
+          end.to raise_error(TradeError)
         end
       end
     end
@@ -45,7 +49,7 @@ RSpec.describe TradeService, type: :service do
         let!(:food) { create(:item, kind: :food, inventory: inventory2) }
 
         it 'must to allow the trade' do
-          expect(described_instance.check_points_trade).to eq(true)
+          expect(described_instance.check_points_trade).to be(true)
         end
       end
 
@@ -67,9 +71,15 @@ RSpec.describe TradeService, type: :service do
       before { described_instance.execute(itemsFrom, itemsTo) }
 
       it 'must to happen trade with sucess' do
-        expect{ water.reload }.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)
-        expect{ ammunition.reload }.to change(ammunition, :inventory_id).from(inventory2.id).to(inventory.id)
-        expect{ food.reload }.to change(food, :inventory_id).from(inventory2.id).to(inventory.id)
+        expect do
+          water.reload
+        end.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)
+        expect do
+          ammunition.reload
+        end.to change(ammunition, :inventory_id).from(inventory2.id).to(inventory.id)
+        expect do
+          food.reload
+        end.to change(food, :inventory_id).from(inventory2.id).to(inventory.id)
       end
     end
   end

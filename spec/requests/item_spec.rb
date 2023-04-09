@@ -21,6 +21,7 @@ RSpec.describe 'Item' do
   describe 'POST /add' do
     let!(:user) { create(:user) }
     let!(:inventory) { create(:inventory, user:) }
+
     describe '#validations' do
       context 'when send params' do
         it 'creates a new Person' do
@@ -35,12 +36,12 @@ RSpec.describe 'Item' do
   describe 'DELETE /remove' do
     let!(:user) { create(:user) }
     let!(:inventory) { create(:inventory, user:) }
-    let!(:item) { create(:item, inventory: inventory) }
+    let!(:item) { create(:item, inventory:) }
 
     let(:request) { delete remove_user_items_path(user.id), params: { item: params } }
 
     it 'destroys the requested person' do
-      expect{ request }.to change(Item, :count).by(-1)
+      expect { request }.to change(Item, :count).by(-1)
       expect(response).to have_http_status(:ok)
     end
   end
@@ -50,7 +51,7 @@ RSpec.describe 'Item' do
     let!(:inventory) { create(:inventory, user:) }
     let!(:userB) { create(:user) }
     let!(:inventory2) { create(:inventory, user: userB) }
-    let(:request) { post trade_user_items_path(user.id), params: params }
+    let(:request) { post trade_user_items_path(user.id), params: }
 
     let(:params) do
       {
@@ -59,13 +60,13 @@ RSpec.describe 'Item' do
         },
         user_to: {
           name: userB.name,
-          items: ['food', 'ammunition']
+          items: %w[food ammunition]
         }
       }
     end
 
     context 'user dont have some items in inventory' do
-      let!(:water) { create(:item, inventory: inventory) }
+      let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
       it 'must to raise exception' do
@@ -77,7 +78,7 @@ RSpec.describe 'Item' do
     end
 
     context 'items points are insuficients for the trade' do
-      let!(:water) { create(:item, inventory: inventory) }
+      let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
       let(:params) do
@@ -101,16 +102,22 @@ RSpec.describe 'Item' do
     end
 
     context 'trade with success' do
-      let!(:water) { create(:item, inventory: inventory) }
+      let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
       let!(:food) { create(:item, kind: :food, inventory: inventory2) }
 
       it 'must to happen trade with sucess' do
         request
 
-        expect{ water.reload }.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)
-        expect{ ammunition.reload }.to change(ammunition, :inventory_id).from(inventory2.id).to(inventory.id)
-        expect{ food.reload }.to change(food, :inventory_id).from(inventory2.id).to(inventory.id)
+        expect do
+          water.reload
+        end.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)
+        expect do
+          ammunition.reload
+        end.to change(ammunition, :inventory_id).from(inventory2.id).to(inventory.id)
+        expect do
+          food.reload
+        end.to change(food, :inventory_id).from(inventory2.id).to(inventory.id)
         expect(response).to have_http_status(:ok)
       end
     end

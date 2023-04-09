@@ -14,15 +14,15 @@ class Item < ApplicationRecord
   private
 
   def set_points
-    case kind
-    when "water"
-      self.point = 4
-    when "food"
-      self.point =  3
-    when "remedy"
-      self.point =  2
-    else
-      self.point =  1
-    end
+    self.point = case kind
+                 when 'water'
+                   4
+                 when 'food'
+                   3
+                 when 'remedy'
+                   2
+                 else
+                   1
+                 end
   end
 end

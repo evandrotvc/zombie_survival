@@ -109,9 +109,8 @@ RSpec.describe 'User' do
     let(:request) { delete user_path(user.id) }
 
     it 'destroys the requested person' do
-      expect{ request }.to change(User, :count).by(-1)
+      expect { request }.to change(User, :count).by(-1)
       expect(response).to have_http_status(:ok)
-
     end
   end
 end
