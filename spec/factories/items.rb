@@ -3,7 +3,6 @@
 FactoryBot.define do
   factory :item do
     kind { 'water' }
-    point { 4 }
 
     inventory { create(:inventory) }
   end
