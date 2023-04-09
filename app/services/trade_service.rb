@@ -19,10 +19,14 @@ class TradeService
       @itemsFrom = @itemsFrom.where(kind: itemsFrom)
       @itemsTo = @itemsTo.where(kind: itemsTo)
 
-      @itemsFrom.count == itemsFrom.count && @itemsTo.count == itemsTo.count
+      return true if @itemsFrom.count == itemsFrom.count && @itemsTo.count == itemsTo.count
+
+      raise TradeError
     end
 
     def check_points_trade
-      @itemsFrom.pluck(:point).sum == @itemsTo.pluck(:point).sum
+      return true if @itemsFrom.pluck(:point).sum == @itemsTo.pluck(:point).sum
+
+      raise TradeError
     end
   end

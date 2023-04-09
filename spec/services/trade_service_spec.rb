@@ -31,9 +31,9 @@ RSpec.describe TradeService, type: :service do
         let!(:water) { create(:item, inventory:) }
         let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
-        it 'must return false' do
-          expect(described_instance.exists_items_inventory?(itemsFrom,
-            itemsTo)).to eq(false)
+        it 'must raise Exception TradeError' do
+          expect { described_instance.exists_items_inventory?(itemsFrom,
+            itemsTo) }.to raise_error(TradeError)
         end
       end
     end
@@ -53,8 +53,8 @@ RSpec.describe TradeService, type: :service do
         let!(:water) { create(:item, inventory:) }
         let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
-        it 'trade must fail' do
-          expect(described_instance.check_points_trade).to eq(false)
+        it 'must raise Exception TradeError' do
+          expect { described_instance.check_points_trade }.to raise_error(TradeError)
         end
       end
     end
