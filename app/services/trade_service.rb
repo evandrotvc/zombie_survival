@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class TradeService
+  include ActiveModel::Model
+
+  validate :infected?
+
   def initialize(user_from, user_to)
     @inventoryFrom = user_from.inventory
     @inventoryTo = user_to.inventory
@@ -9,6 +13,8 @@ class TradeService
   end
 
   def execute(itemsFrom, itemsTo)
+    return unless valid?
+
     return unless exists_items_inventory?(itemsFrom, itemsTo)
 
     return unless check_points_trade
@@ -30,5 +36,11 @@ class TradeService
     return true if @itemsFrom.pluck(:point).sum == @itemsTo.pluck(:point).sum
 
     raise TradeError, 'Items points are insuficients for the trade!'
+  end
+
+  def infected?
+    return true unless @inventoryFrom.user.infected? || @inventoryTo.user.infected?
+
+    raise TradeError, 'Users infecteds cannot to trade items!'
   end
 end

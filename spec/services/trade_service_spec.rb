@@ -68,9 +68,19 @@ RSpec.describe TradeService, type: :service do
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
       let!(:food) { create(:item, kind: :food, inventory: inventory2) }
 
-      before { described_instance.execute(itemsFrom, itemsTo) }
+      context 'must validate status user' do
+        before { user.update(status: :infected) }
+
+        it 'must raise exception' do
+          expect do
+            described_instance.execute(itemsFrom, itemsTo)
+          end.to raise_error(TradeError)
+        end
+      end
 
       it 'must to happen trade with sucess' do
+        described_instance.execute(itemsFrom, itemsTo)
+
         expect do
           water.reload
         end.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)

@@ -101,6 +101,20 @@ RSpec.describe 'Item' do
       end
     end
 
+    context 'user infected' do
+      let!(:water) { create(:item, inventory:) }
+      let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
+
+      before { user.update(status: :infected) }
+
+      it 'must to raise exception' do
+        request
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json[:message]).to eq('Users infecteds cannot to trade items!')
+      end
+    end
+
     context 'trade with success' do
       let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
