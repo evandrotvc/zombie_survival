@@ -3,7 +3,7 @@
 class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_user,
-    only: %i[show edit update destroy]
+    only: %i[show edit update destroy, location]
 
   def index
     @users = User.all
@@ -53,6 +53,14 @@ class UsersController < ApplicationController
     end
   end
 
+  def location
+    if @user.update(location_params)
+      render json: @user, status: :ok
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     @user.destroy!
 
@@ -67,5 +75,9 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :gender, :age, :latitude, :longitude)
+  end
+
+  def location_params
+    params.require(:location).permit(:latitude, :longitude)
   end
 end
