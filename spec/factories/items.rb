@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :item do
     kind { 'water' }
+    quantity { 1 }
 
     inventory { create(:inventory) }
   end

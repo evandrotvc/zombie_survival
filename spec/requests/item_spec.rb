@@ -14,7 +14,8 @@ RSpec.describe 'Item' do
 
   let(:params) do
     {
-      kind: 'water'
+      kind: 'water',
+      quantity: 1
     }
   end
 
@@ -24,7 +25,7 @@ RSpec.describe 'Item' do
 
     describe '#validations' do
       context 'when send params' do
-        it 'creates a new Person' do
+        it 'creates a new Item' do
           expect do
             post add_user_items_path(user), params: { item: params }
           end.to change(Item, :count).by(1)
@@ -56,11 +57,11 @@ RSpec.describe 'Item' do
     let(:params) do
       {
         user: {
-          items: ['water']
+          items: [ { kind: 'water' , quantity: 1 } ]
         },
         user_to: {
           name: userB.name,
-          items: %w[food ammunition]
+          items: [ { kind: 'food' , quantity: 1 }, { kind: 'ammunition' , quantity: 1 } ]
         }
       }
     end
@@ -73,7 +74,32 @@ RSpec.describe 'Item' do
         request
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json[:message]).to eq('User doesnt have some item!')
+        expect(json[:message]).to eq("#{inventory2.user.name} dont have food or quantity insuficient!")
+      end
+    end
+
+    context 'should user dont have quantity items suficients for the trade' do
+      let!(:water) { create(:item, inventory:) }
+      let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
+      let!(:food) { create(:item, kind: :food, inventory: inventory2) }
+
+      let(:params) do
+        {
+          user: {
+            items: [ { kind: 'water' , quantity: 1 } ]
+          },
+          user_to: {
+            name: userB.name,
+            items: [ { kind: 'food' , quantity: 1 }, { kind: 'ammunition' , quantity: 500 } ]
+          }
+        }
+      end
+
+      it 'must to raise exception' do
+        request
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json[:message]).to eq("#{inventory2.user.name} dont have ammunition or quantity insuficient!")
       end
     end
 
@@ -84,11 +110,11 @@ RSpec.describe 'Item' do
       let(:params) do
         {
           user: {
-            items: ['water']
+            items: [ { kind: 'water' , quantity: 1 } ]
           },
           user_to: {
             name: userB.name,
-            items: ['ammunition']
+            items: [ { kind: 'ammunition' , quantity: 1 } ]
           }
         }
       end
@@ -122,17 +148,12 @@ RSpec.describe 'Item' do
 
       it 'must to happen trade with sucess' do
         request
-
-        expect do
-          water.reload
-        end.to change(water, :inventory_id).from(inventory.id).to(inventory2.id)
-        expect do
-          ammunition.reload
-        end.to change(ammunition, :inventory_id).from(inventory2.id).to(inventory.id)
-        expect do
-          food.reload
-        end.to change(food, :inventory_id).from(inventory2.id).to(inventory.id)
+        byebug
         expect(response).to have_http_status(:ok)
+        expect(inventory.items.reload.count).to eq(2)
+        expect(inventory.items.pluck(:kind)).to include('food', 'ammunition')
+        expect(inventory2.items.reload.count).to eq(1)
+        expect(inventory2.items.pluck(:kind)).to include('water')
       end
     end
   end
