@@ -3,6 +3,13 @@
 class TradeService
   include ActiveModel::Model
 
+  ITEM_POINTS = {
+    water: 4,
+    food: 3,
+    medicine: 2,
+    ammunition: 1
+  }
+
   validate :infected?
 
   def initialize(user_from, user_to)
@@ -17,25 +24,68 @@ class TradeService
 
     return unless exists_items_inventory?(itemsFrom, itemsTo)
 
-    return unless check_points_trade
+    return unless check_points_trade(itemsFrom, itemsTo)
 
-    @itemsFrom.update_all(inventory_id: @inventoryTo.id)
-    @itemsTo.update_all(inventory_id: @inventoryFrom.id)
+    update_inventory(itemsTo, itemsFrom, @inventoryFrom)
+    update_inventory(itemsFrom, itemsTo, @inventoryTo)
+  end
+
+  def update_inventory(itemsReceive, itemsLoss, inventory)
+    receive_items(itemsReceive, inventory)
+    loss_items(itemsLoss, inventory)
+  end
+
+  def receive_items(itemsReceive, inventory)
+    itemsReceive.each do |item|
+      itemUser = inventory.items.find_or_create_by(kind: item[:kind])
+
+      itemUser.quantity += item[:quantity].to_i
+      itemUser.save!
+    end
+  end
+
+  def loss_items(itemsLoss, inventory)
+    itemsLoss.each do |item|
+      itemUser = inventory.items.find_by(kind: item[:kind])
+      itemUser.quantity -= item[:quantity].to_i
+      itemUser.save!
+    end
   end
 
   def exists_items_inventory?(itemsFrom, itemsTo)
-    @itemsFrom = @itemsFrom.where(kind: itemsFrom)
-    @itemsTo = @itemsTo.where(kind: itemsTo)
+    @itemsFrom = @itemsFrom.where(kind: itemsFrom.pluck(:kind))
+    @itemsTo = @itemsTo.where(kind: itemsTo.pluck(:kind))
 
-    return true if @itemsFrom.count == itemsFrom.count && @itemsTo.count == itemsTo.count
+    check_quantity(itemsFrom, @inventoryFrom)
+    check_quantity(itemsTo, @inventoryTo)
 
-    raise TradeError, 'User doesnt have some item!'
+    true
   end
 
-  def check_points_trade
-    return true if @itemsFrom.pluck(:point).sum == @itemsTo.pluck(:point).sum
+  def check_quantity(items, inventory)
+    items.map do |item|
+      item_user = inventory.items.find_by(kind: item[:kind])
+
+      if item_user.nil? || item_user.quantity < item[:quantity].to_i
+        raise TradeError, "#{inventory.user.name} dont have #{item[:kind]} or quantity insuficient!"
+      end
+    end
+  end
+
+  def check_points_trade(itemsFrom, itemsTo)
+    return true if calculate_points(itemsFrom) == calculate_points(itemsTo)
 
     raise TradeError, 'Items points are insuficients for the trade!'
+  end
+
+  private
+
+  def calculate_points(items)
+    points = 0
+    items.to_a.each do |item|
+      points += ITEM_POINTS[item[:kind].to_sym] * item[:quantity].to_i
+    end
+    points
   end
 
   def infected?
