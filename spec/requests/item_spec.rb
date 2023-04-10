@@ -148,7 +148,7 @@ RSpec.describe 'Item' do
 
       it 'must to happen trade with sucess' do
         request
-        byebug
+
         expect(response).to have_http_status(:ok)
         expect(inventory.items.reload.count).to eq(2)
         expect(inventory.items.pluck(:kind)).to include('food', 'ammunition')
