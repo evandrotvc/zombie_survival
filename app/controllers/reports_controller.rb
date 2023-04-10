@@ -24,7 +24,7 @@ class ReportsController < ApplicationController
 
   def lost_points
     infected_users = User.infected
-    lost_points = infected_users.map{ |user| user.inventory.items.sum(:point) }.sum
+    lost_points = infected_users.map { |user| user.inventory.items.sum(:point) }.sum
 
     render plain: "Número de pontos perdidos por usuários infectados: #{lost_points}"
   end

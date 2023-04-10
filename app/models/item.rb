@@ -28,6 +28,6 @@ class Item < ApplicationRecord
   end
 
   def quantity_zero?
-    self.destroy if quantity == 0
+    destroy if quantity == 0
   end
 end

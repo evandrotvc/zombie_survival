@@ -7,7 +7,8 @@ class ItemsController < ApplicationController
   rescue_from TradeError, with: :trade_error
 
   def add
-    @user.inventory.items.create(kind: item_params[:kind], quantity: item_params[:quantity])
+    @user.inventory.items.create(kind: item_params[:kind],
+      quantity: item_params[:quantity])
     render status: :ok, json: @item
   end
 
@@ -46,10 +47,10 @@ class ItemsController < ApplicationController
   end
 
   def user_from_params
-    params.require(:user).permit(items: [:kind, :quantity])
+    params.require(:user).permit(items: %i[kind quantity])
   end
 
   def user_to_params
-    params.require(:user_to).permit(:name, items: [:kind, :quantity])
+    params.require(:user_to).permit(:name, items: %i[kind quantity])
   end
 end

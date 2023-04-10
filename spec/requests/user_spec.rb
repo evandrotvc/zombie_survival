@@ -82,6 +82,7 @@ RSpec.describe 'User' do
 
   describe 'PATCH /update' do
     let(:user) { create(:user, name: 'John') }
+
     context 'with valid parameters' do
       let(:new_attributes) do
         {
@@ -92,7 +93,7 @@ RSpec.describe 'User' do
       it 'updates the requested person' do
         patch user_url(user), params: { user: new_attributes }
 
-        expect{ user.reload }.to change(user, :name).from('John').to('fulano')
+        expect { user.reload }.to change(user, :name).from('John').to('fulano')
         expect(response).to have_http_status(:ok)
       end
     end
@@ -113,7 +114,7 @@ RSpec.describe 'User' do
         put location_user_path(user), params: { location: new_attributes }
 
         expect(response).to have_http_status(:ok)
-        expect{ user.reload }.to change(user, :latitude).from(50.0).to(45.5)
+        expect { user.reload }.to change(user, :latitude).from(50.0).to(45.5)
         expect(user.longitude).to eq(-90.5)
       end
     end

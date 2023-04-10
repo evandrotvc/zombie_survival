@@ -3,7 +3,7 @@
 class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_user,
-    only: %i[show edit update destroy, location]
+    only: %i[show edit update destroy location]
 
   def index
     @users = User.all

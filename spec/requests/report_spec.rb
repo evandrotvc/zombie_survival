@@ -39,7 +39,7 @@ RSpec.describe 'Report' do
       get reports_lost_points_path
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to eq("Número de pontos perdidos por usuários infectados: 8")
+      expect(response.body).to eq('Número de pontos perdidos por usuários infectados: 8')
     end
   end
 end

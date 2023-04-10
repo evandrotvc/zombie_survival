@@ -11,8 +11,8 @@ RSpec.describe TradeService, type: :service do
   let!(:userB) { create(:user) }
   let!(:inventory2) { create(:inventory, user: userB) }
 
-  let(:itemsFrom) { [ { kind: 'water', quantity: 2 } ] }
-  let(:itemsTo) { [ { kind: 'food', quantity: 1 }, { kind: 'ammunition', quantity: 1 } ] }
+  let(:itemsFrom) { [{ kind: 'water', quantity: 2 }] }
+  let(:itemsTo) { [{ kind: 'food', quantity: 1 }, { kind: 'ammunition', quantity: 1 }] }
 
   describe '#methods' do
     describe '#exists_items_inventory?' do
@@ -45,7 +45,7 @@ RSpec.describe TradeService, type: :service do
         let!(:water) { create(:item, inventory:, quantity: 2) }
         let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
         let!(:food) { create(:item, kind: :food, inventory: inventory2) }
-        let(:itemsFrom) { [ { kind: 'water', quantity: 200 } ] }
+        let(:itemsFrom) { [{ kind: 'water', quantity: 200 }] }
 
         it 'must raise Exception TradeError' do
           expect do
@@ -59,11 +59,15 @@ RSpec.describe TradeService, type: :service do
     describe '#check_points_trade' do
       context 'when the points item are equals' do
         let!(:water) { create(:item, inventory:, quantity: 2) }
-        let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2 , quantity: 2) }
-        let!(:food) { create(:item, kind: :food, inventory: inventory2 , quantity: 2) }
+        let!(:ammunition) do
+          create(:item, kind: :ammunition, inventory: inventory2, quantity: 2)
+        end
+        let!(:food) { create(:item, kind: :food, inventory: inventory2, quantity: 2) }
 
-        let(:itemsFrom) { [ { kind: 'water', quantity: 2 } ] }
-        let(:itemsTo) { [ { kind: 'food', quantity: 2 }, { kind: 'ammunition', quantity: 2 } ] }
+        let(:itemsFrom) { [{ kind: 'water', quantity: 2 }] }
+        let(:itemsTo) do
+          [{ kind: 'food', quantity: 2 }, { kind: 'ammunition', quantity: 2 }]
+        end
 
         it 'must to allow the trade' do
           expect(described_instance.check_points_trade(itemsFrom, itemsTo)).to be(true)
@@ -74,22 +78,30 @@ RSpec.describe TradeService, type: :service do
         let!(:water) { create(:item, inventory:) }
         let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
-        let(:itemsFrom) { [ { kind: 'water', quantity: 2 } ] }
-        let(:itemsTo) { [ { kind: 'food', quantity: 1 }, { kind: 'ammunition', quantity: 1 } ] }
+        let(:itemsFrom) { [{ kind: 'water', quantity: 2 }] }
+        let(:itemsTo) do
+          [{ kind: 'food', quantity: 1 }, { kind: 'ammunition', quantity: 1 }]
+        end
 
         it 'must raise Exception TradeError' do
-          expect { described_instance.check_points_trade(itemsFrom, itemsTo) }.to raise_error(TradeError)
+          expect do
+            described_instance.check_points_trade(itemsFrom, itemsTo)
+          end.to raise_error(TradeError)
         end
       end
     end
 
     describe '#execute' do
       let!(:water) { create(:item, inventory:, quantity: 2) }
-      let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2, quantity: 2) }
+      let!(:ammunition) do
+        create(:item, kind: :ammunition, inventory: inventory2, quantity: 2)
+      end
       let!(:food) { create(:item, kind: :food, inventory: inventory2, quantity: 2) }
 
-      let(:itemsFrom) { [ { kind: 'water', quantity: 2 } ] }
-      let(:itemsTo) { [ { kind: 'food', quantity: 2 }, { kind: 'ammunition', quantity: 2 } ] }
+      let(:itemsFrom) { [{ kind: 'water', quantity: 2 }] }
+      let(:itemsTo) do
+        [{ kind: 'food', quantity: 2 }, { kind: 'ammunition', quantity: 2 }]
+      end
 
       context 'must validate status user' do
         before { user.update(status: :infected) }

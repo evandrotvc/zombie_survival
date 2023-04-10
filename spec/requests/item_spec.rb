@@ -57,11 +57,11 @@ RSpec.describe 'Item' do
     let(:params) do
       {
         user: {
-          items: [ { kind: 'water' , quantity: 1 } ]
+          items: [{ kind: 'water', quantity: 1 }]
         },
         user_to: {
           name: userB.name,
-          items: [ { kind: 'food' , quantity: 1 }, { kind: 'ammunition' , quantity: 1 } ]
+          items: [{ kind: 'food', quantity: 1 }, { kind: 'ammunition', quantity: 1 }]
         }
       }
     end
@@ -86,11 +86,12 @@ RSpec.describe 'Item' do
       let(:params) do
         {
           user: {
-            items: [ { kind: 'water' , quantity: 1 } ]
+            items: [{ kind: 'water', quantity: 1 }]
           },
           user_to: {
             name: userB.name,
-            items: [ { kind: 'food' , quantity: 1 }, { kind: 'ammunition' , quantity: 500 } ]
+            items: [{ kind: 'food', quantity: 1 },
+                    { kind: 'ammunition', quantity: 500 }]
           }
         }
       end
@@ -110,11 +111,11 @@ RSpec.describe 'Item' do
       let(:params) do
         {
           user: {
-            items: [ { kind: 'water' , quantity: 1 } ]
+            items: [{ kind: 'water', quantity: 1 }]
           },
           user_to: {
             name: userB.name,
-            items: [ { kind: 'ammunition' , quantity: 1 } ]
+            items: [{ kind: 'ammunition', quantity: 1 }]
           }
         }
       end

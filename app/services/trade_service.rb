@@ -67,7 +67,8 @@ class TradeService
       item_user = inventory.items.find_by(kind: item[:kind])
 
       if item_user.nil? || item_user.quantity < item[:quantity].to_i
-        raise TradeError, "#{inventory.user.name} dont have #{item[:kind]} or quantity insuficient!"
+        raise TradeError,
+          "#{inventory.user.name} dont have #{item[:kind]} or quantity insuficient!"
       end
     end
   end
