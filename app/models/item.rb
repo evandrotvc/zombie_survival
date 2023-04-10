@@ -3,13 +3,14 @@
 class Item < ApplicationRecord
   belongs_to :inventory
 
-  validates :kind, presence: true
+  validates :kind, :quantity, presence: true
 
   enum kind: {
     water: 'water', food: 'food', remedy: 'remedy', ammunition: 'ammunition'
   }
 
   before_create :set_points
+  after_update :quantity_zero?
 
   private
 
@@ -24,5 +25,9 @@ class Item < ApplicationRecord
                  else
                    1
                  end
+  end
+
+  def quantity_zero?
+    self.destroy if quantity == 0
   end
 end
