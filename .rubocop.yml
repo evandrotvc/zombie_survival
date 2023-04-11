@@ -39,6 +39,16 @@ Lint/MissingSuper:
 Style/ClassAndModuleChildren:
   Enabled: false
 
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+Naming/VariableName:
+  Enabled: false
+
+
 Style/Documentation:
   Enabled: false
 

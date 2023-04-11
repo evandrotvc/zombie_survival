@@ -34,7 +34,7 @@ class ItemsController < ApplicationController
   private
 
   def trade_error(exception)
-    render json: { message: exception.message, userTo_items: @user_to.inventory.items.pluck(:kind) },
+    render json: { message: exception.message },
       status: :unprocessable_entity
   end
 

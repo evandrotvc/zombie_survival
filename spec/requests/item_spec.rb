@@ -50,8 +50,8 @@ RSpec.describe 'Item' do
   describe 'POST /trade' do
     let!(:user) { create(:user) }
     let!(:inventory) { create(:inventory, user:) }
-    let!(:userB) { create(:user) }
-    let!(:inventory2) { create(:inventory, user: userB) }
+    let!(:user2) { create(:user) }
+    let!(:inventory2) { create(:inventory, user: user2) }
     let(:request) { post trade_user_items_path(user.id), params: }
 
     let(:params) do
@@ -60,25 +60,29 @@ RSpec.describe 'Item' do
           items: [{ kind: 'water', quantity: 1 }]
         },
         user_to: {
-          name: userB.name,
+          name: user2.name,
           items: [{ kind: 'food', quantity: 1 }, { kind: 'ammunition', quantity: 1 }]
         }
       }
     end
 
-    context 'user dont have some items in inventory' do
+    context 'when user dont have some items in inventory' do
       let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
+
+      let(:comment) do
+        "#{inventory2.user.name} dont have food or quantity insuficient!"
+      end
 
       it 'must to raise exception' do
         request
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json[:message]).to eq("#{inventory2.user.name} dont have food or quantity insuficient!")
+        expect(json[:message]).to eq(comment)
       end
     end
 
-    context 'should user dont have quantity items suficients for the trade' do
+    context 'when user dont have quantity items suficients for the trade' do
       let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
       let!(:food) { create(:item, kind: :food, inventory: inventory2) }
@@ -89,22 +93,26 @@ RSpec.describe 'Item' do
             items: [{ kind: 'water', quantity: 1 }]
           },
           user_to: {
-            name: userB.name,
+            name: user2.name,
             items: [{ kind: 'food', quantity: 1 },
                     { kind: 'ammunition', quantity: 500 }]
           }
         }
       end
 
+      let(:comment) do
+        "#{inventory2.user.name} dont have ammunition or quantity insuficient!"
+      end
+
       it 'must to raise exception' do
         request
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json[:message]).to eq("#{inventory2.user.name} dont have ammunition or quantity insuficient!")
+        expect(json[:message]).to eq(comment)
       end
     end
 
-    context 'items points are insuficients for the trade' do
+    context 'when items points are insuficients for the trade' do
       let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
@@ -114,7 +122,7 @@ RSpec.describe 'Item' do
             items: [{ kind: 'water', quantity: 1 }]
           },
           user_to: {
-            name: userB.name,
+            name: user2.name,
             items: [{ kind: 'ammunition', quantity: 1 }]
           }
         }
@@ -128,7 +136,7 @@ RSpec.describe 'Item' do
       end
     end
 
-    context 'user infected' do
+    context 'when user infected' do
       let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
 
@@ -142,7 +150,7 @@ RSpec.describe 'Item' do
       end
     end
 
-    context 'trade with success' do
+    context 'when trade with success' do
       let!(:water) { create(:item, inventory:) }
       let!(:ammunition) { create(:item, kind: :ammunition, inventory: inventory2) }
       let!(:food) { create(:item, kind: :food, inventory: inventory2) }

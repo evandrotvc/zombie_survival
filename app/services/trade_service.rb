@@ -8,7 +8,7 @@ class TradeService
     food: 3,
     medicine: 2,
     ammunition: 1
-  }
+  }.freeze
 
   validate :infected?
 
@@ -19,24 +19,24 @@ class TradeService
     @itemsTo = user_to.inventory.items
   end
 
-  def execute(itemsFrom, itemsTo)
+  def execute(items_from, items_to)
     return unless valid?
 
-    return unless exists_items_inventory?(itemsFrom, itemsTo)
+    return unless exists_items_inventory?(items_from, items_to)
 
-    return unless check_points_trade(itemsFrom, itemsTo)
+    return unless check_points_trade(items_from, items_to)
 
-    update_inventory(itemsTo, itemsFrom, @inventoryFrom)
-    update_inventory(itemsFrom, itemsTo, @inventoryTo)
+    update_inventory(items_to, items_from, @inventoryFrom)
+    update_inventory(items_from, items_to, @inventoryTo)
   end
 
-  def update_inventory(itemsReceive, itemsLoss, inventory)
-    receive_items(itemsReceive, inventory)
-    loss_items(itemsLoss, inventory)
+  def update_inventory(items_receive, items_loss, inventory)
+    receive_items(items_receive, inventory)
+    loss_items(items_loss, inventory)
   end
 
-  def receive_items(itemsReceive, inventory)
-    itemsReceive.each do |item|
+  def receive_items(items_receive, inventory)
+    items_receive.each do |item|
       itemUser = inventory.items.find_or_create_by(kind: item[:kind])
 
       itemUser.quantity += item[:quantity].to_i
@@ -44,20 +44,20 @@ class TradeService
     end
   end
 
-  def loss_items(itemsLoss, inventory)
-    itemsLoss.each do |item|
+  def loss_items(items_loss, inventory)
+    items_loss.each do |item|
       itemUser = inventory.items.find_by(kind: item[:kind])
       itemUser.quantity -= item[:quantity].to_i
       itemUser.save!
     end
   end
 
-  def exists_items_inventory?(itemsFrom, itemsTo)
-    @itemsFrom = @itemsFrom.where(kind: itemsFrom.pluck(:kind))
-    @itemsTo = @itemsTo.where(kind: itemsTo.pluck(:kind))
+  def exists_items_inventory?(items_from, items_to)
+    @itemsFrom = @itemsFrom.where(kind: items_from.pluck(:kind))
+    @itemsTo = @itemsTo.where(kind: items_to.pluck(:kind))
 
-    check_quantity(itemsFrom, @inventoryFrom)
-    check_quantity(itemsTo, @inventoryTo)
+    check_quantity(items_from, @inventoryFrom)
+    check_quantity(items_to, @inventoryTo)
 
     true
   end
@@ -73,8 +73,8 @@ class TradeService
     end
   end
 
-  def check_points_trade(itemsFrom, itemsTo)
-    return true if calculate_points(itemsFrom) == calculate_points(itemsTo)
+  def check_points_trade(items_from, items_to)
+    return true if calculate_points(items_from) == calculate_points(items_to)
 
     raise TradeError, 'Items points are insuficients for the trade!'
   end
