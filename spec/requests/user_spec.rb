@@ -29,6 +29,8 @@ RSpec.describe 'User' do
           expect do
             post users_path, params: { user: params }
           end.to change(User, :count).by(1)
+
+          expect(User.last.inventory).should_not be_nil
         end
 
         it 'return person created' do

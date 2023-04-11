@@ -13,17 +13,17 @@ class ItemsController < ApplicationController
     if @item.present?
       add_item
     else
-      @user.inventory.items.create(kind: item_params[:kind],
+      @item = @user.inventory.items.create(kind: item_params[:kind],
         quantity: item_params[:quantity])
     end
-    render status: :ok, json: @item
+    render status: :ok, json: { item: @item }
   end
 
   def remove
     @item = @user.inventory.items.find_by(kind: item_params[:kind])
 
     if @item.destroy
-      render status: :ok, json: @item
+      render status: :ok, json: { item: @item }
     else
       render :errors, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class ItemsController < ApplicationController
     TradeService.new(@user, @user_to).execute(user_from_params[:items],
       user_to_params[:items])
 
-    render status: :ok, json: @user
+    render :trade, status: :ok
   end
 
   private

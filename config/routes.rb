@@ -4,12 +4,9 @@ Rails.application.routes.draw do
   resources :users do
     member do
       put :location
+      post :infected
     end
-    resources :survivors, param: 'user_target_id' do
-      member do
-        post :infected, controller: :users
-      end
-    end
+
     resources :items do
       collection do
         post :add
