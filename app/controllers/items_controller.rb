@@ -3,12 +3,19 @@
 class ItemsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_user, only: %i[add remove trade]
+  before_action :infected?, only: %i[add remove]
 
   rescue_from TradeError, with: :trade_error
 
   def add
-    @user.inventory.items.create(kind: item_params[:kind],
-      quantity: item_params[:quantity])
+    @item = @user.inventory.items.find_by(kind: item_params[:kind])
+
+    if @item.present?
+      add_item
+    else
+      @user.inventory.items.create(kind: item_params[:kind],
+        quantity: item_params[:quantity])
+    end
     render status: :ok, json: @item
   end
 
@@ -52,5 +59,13 @@ class ItemsController < ApplicationController
 
   def user_to_params
     params.require(:user_to).permit(:name, items: %i[kind quantity])
+  end
+
+  def infected?
+    raise TradeError, 'Users infecteds cannot to use inventory!' if @user.infected?
+  end
+
+  def add_item
+    @item.update(quantity: @item.quantity + item_params[:quantity].to_i)
   end
 end

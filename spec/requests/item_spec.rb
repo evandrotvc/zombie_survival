@@ -31,6 +31,27 @@ RSpec.describe 'Item' do
           end.to change(Item, :count).by(1)
         end
       end
+
+      context 'when add a item already existent in inventory' do
+        let!(:water) { create(:item, inventory:) }
+
+        it 'add more quantity Item' do
+          post add_user_items_path(user), params: { item: params }
+
+          expect { water.reload }.to change(water, :quantity).from(1).to(2)
+        end
+      end
+
+      context 'when user infected' do
+        before { user.update(status: :infected) }
+
+        it 'must to raise exception' do
+          post add_user_items_path(user), params: { item: params }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json[:message]).to eq('Users infecteds cannot to use inventory!')
+        end
+      end
     end
   end
 
@@ -41,7 +62,18 @@ RSpec.describe 'Item' do
 
     let(:request) { delete remove_user_items_path(user.id), params: { item: params } }
 
-    it 'destroys the requested person' do
+    context 'when user infected' do
+      before { user.update(status: :infected) }
+
+      it 'must to raise exception' do
+        request
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json[:message]).to eq('Users infecteds cannot to use inventory!')
+      end
+    end
+
+    it 'destroy the item from inventory' do
       expect { request }.to change(Item, :count).by(-1)
       expect(response).to have_http_status(:ok)
     end
