@@ -48,7 +48,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_06_180636) do
     t.float "latitude", null: false
     t.float "longitude", null: false
     t.integer "age", null: false
-    t.integer "marks", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

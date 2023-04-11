@@ -7,7 +7,6 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.float :latitude, null: false
       t.float :longitude, null: false
       t.integer :age, null: false
-      t.integer :marks, null: false, default: 0
 
       t.timestamps
     end
