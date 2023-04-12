@@ -133,20 +133,66 @@ rspec
 - GET index
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/index_users.png)
 
-- PUT location
+- PUT location => (users/user_id/infected)
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/location.png)
 
-- POST infected
+- POST infected => (users/user_id/infected)
+  
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/infected.png)
 
-- POST add_item
+- POST add_item => (users/user_id/add)
+- params
+```
+{
+	"item": {
+		"kind": "ammunition",
+		"quantity": 1
+	}
+}
+```
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/add_item.png)
 
 
-- DELETE remove_item
+- DELETE remove_item => (users/user_id/remove)
+- params
+```
+{
+	"item": {
+		"kind": "ammunition"
+	}
+}
+```
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/remove_item.png)
 
-- POST trade
+- POST trade => (users/user_id/trade)
+- params
+```
+{
+	"user_to": {
+		"name": "fulano2",
+		"items": [
+			{ 
+				"kind": "water",
+				"quantity": 1 
+			}
+		]
+	},
+	
+	"user": {
+		"items": [
+			{ 
+				"kind": "ammunition",
+				"quantity": 1 
+			},
+			
+			{ 
+				"kind": "food",
+				"quantity": 1 
+			}
+		]
+	}
+}
+```
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/trade.png)
 
 - Exception example(users cannot to use inventory)
