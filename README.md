@@ -81,3 +81,73 @@ Para isso, o sistema deverá contar com as seguintes funcionalidades:
 1. **Documente** todo o seu sistema, desde como fazer o *setup* e rodar os testes, até as rotas criadas, exemplos de chamadas à *API* e as decisões arquiteturais;
 2. **Testes, testes e testes!** Num apocalipse zumbi, ninguém tem tempo a perder fazendo testes manuais, então automatize ao máximo sua suite;
 3. **Utilize Git**, com commits pequenos e bem descritos (nada de um commit único com todo o código);
+
+
+
+
+
+_____________________________________________________________
+
+
+
+## Instalando projeto
+
+É necessário ter Docker e docker-compose. A aplicação roda o banco e o server tudo em docker.
+
+Para instalar o projeto, siga estas etapas:
+
+Setando o .env
+```
+copie o arquivo .env.test com o nome .env
+```
+depois rode
+```
+docker compose build
+```
+
+depois rode
+```
+docker compose up
+```
+
+Se tudo foi instalado com sucesso, estará rodando os containers postgres(port: 5432) e o server(port: 3000).
+Agora é possível realizar os testes se todos os containers executaram corretamente
+
+## Tests
+
+No terminal, caso queira rodar os testes, basta entrar no container e rodar o comando a seguir.
+```
+docker exec -it survivor bash
+```
+e depois:
+```
+rspec
+```
+
+
+
+## Examples
+- POST create
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/create.png)
+
+- GET index
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/index_users.png)
+
+- PUT location
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/location.png)
+
+- POST infected
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/infected.png)
+
+- POST add_item
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/add_item.png)
+
+
+- DELETE remove_item
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/remove_item.png)
+
+- POST trade
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/trade.png)
+
+- Exception example(users cannot to use inventory)
+![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/exception.png)
