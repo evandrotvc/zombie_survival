@@ -7,6 +7,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
+
     render :index, status: :ok
   end
 
@@ -27,7 +28,8 @@ class UsersController < ApplicationController
 
     if mark
       render status: :ok,
-        json: { message: "#{@user_target.name} marked with sucess.", user_target: @user_target }
+        json: { message: "#{@user_target.name} marked with sucess.",
+                user_target: @user_target }
     end
   rescue ActiveRecord::RecordNotUnique
     render status: :unprocessable_entity,

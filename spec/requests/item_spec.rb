@@ -84,7 +84,7 @@ RSpec.describe 'Item' do
     let!(:inventory) { create(:inventory, user:) }
     let!(:user2) { create(:user) }
     let!(:inventory2) { create(:inventory, user: user2) }
-    let(:request) { post trade_user_items_path(user.id), params: }
+    let(:request) { post trade_user_items_path(user.id), params:, as: :json }
 
     let(:params) do
       {
@@ -188,8 +188,8 @@ RSpec.describe 'Item' do
       let!(:food) { create(:item, kind: :food, inventory: inventory2) }
 
       it 'must to happen trade with sucess' do
+        # byebug
         request
-
         expect(response).to have_http_status(:ok)
         expect(inventory.items.reload.count).to eq(2)
         expect(inventory.items.pluck(:kind)).to include('food', 'ammunition')

@@ -42,9 +42,11 @@ RSpec.describe 'User' do
   end
 
   describe 'GET /index' do
+    let!(:user) { create(:user) }
+    let!(:inventory) { create(:inventory, user:) }
+
     it 'renders a successful response' do
-      User.create! params
-      get users_path
+      get users_path, as: :json
       expect(response).to have_http_status(:ok)
     end
   end
@@ -59,7 +61,9 @@ RSpec.describe 'User' do
       end
 
       it 'must create a marksurvivor', :aggregate_failures do
-        expect { post(infected_user_survivor_path(survivor, User.second)) }
+        expect do
+          post(infected_user_path(survivor), params: { name_target: last_user.name })
+        end
           .to change(MarkSurvivor, :count).by(1)
       end
     end
@@ -71,7 +75,7 @@ RSpec.describe 'User' do
       before do
         mark_survivor
         mark_survivor2
-        post(infected_user_survivor_path(last_user, survivor))
+        post(infected_user_path(last_user), params: { name_target: survivor.name })
       end
 
       it 'must update status to infected', :aggregate_failures do
