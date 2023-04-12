@@ -133,11 +133,25 @@ rspec
 - GET index
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/index_users.png)
 
-- PUT location => (users/user_id/infected)
+- PUT location => (users/user_id/location)
+- params
+```
+{
+	"location": {
+		"latitude": 10.0,
+		"longitude": 20.0
+	}
+}
+```
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/location.png)
 
 - POST infected => (users/user_id/infected)
-  
+- params
+```
+{
+	"name_target": "fulano2"
+}
+```
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/infected.png)
 
 - POST add_item => (users/user_id/add)
