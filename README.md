@@ -44,6 +44,7 @@ rspec
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/index_users.png)
 
 - PUT location => (users/user_id/location)
+- Atualiza a localização do usuário
 - params
 ```
 {
@@ -56,6 +57,7 @@ rspec
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/location.png)
 
 - POST infected => (users/user_id/infected)
+- Marca o usuário alvo como infectado
 - params
 ```
 {
@@ -65,6 +67,7 @@ rspec
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/infected.png)
 
 - POST add_item => (users/user_id/add)
+- adiciona o item no inventário
 - params
 ```
 {
@@ -78,6 +81,7 @@ rspec
 
 
 - DELETE remove_item => (users/user_id/remove)
+- deleta o item do inventário
 - params
 ```
 {
@@ -89,6 +93,7 @@ rspec
 ![alt text](https://github.com/evandrotvc/zombie_survival/blob/main/app/assets/images/remove_item.png)
 
 - POST trade => (users/user_id/trade)
+- Realiza troca
 - params
 ```
 {
